@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Video Server</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+      var webSocket = new WebSocket("ws://" + window.location.host + window.location.pathname + "ws");
+
+      webSocket.onopen = function () {
+        webSocket.send(1);
+      };
+
+      webSocket.onmessage = function (msg) {
+        $("#video").attr("src", "data:image/jpg;base64," + msg.data);
+        webSocket.send(1);
+      };
+
+      webSocket.onerror = function (e) {
+        console.log(e);
+        webSocket.send(1);
+      };
+    });
+  </script>
+  <style>
+    body {
+      font-family: "メイリオ";
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Neko Camera</h1>
+  <img id="video" src="" />
+</body>
+
+</html>
