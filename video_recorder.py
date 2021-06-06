@@ -37,7 +37,7 @@ class VideoRecorder(object):
             if image is None:
                 time.sleep(0.3)
                 continue
-            _, image = cv2.imencode('.jpg', image)
+            _, image = cv2.imencode('.png', image)
             image_np = np.array(image).tobytes()
             self.store.set('image', image_np)
             image_id = os.urandom(4)
