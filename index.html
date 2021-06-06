@@ -13,7 +13,7 @@
       };
 
       webSocket.onmessage = function (msg) {
-        $("#video").attr("src", "data:image/png;base64," + msg.data);
+        $("#video").attr("src", "data:image/jpg;base64," + msg.data);
         webSocket.send(1);
       };
 

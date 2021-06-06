@@ -9,7 +9,7 @@ import logging
 
 
 class VideoRecorder(object):
-    def __init__(self, src: int=-1, width: int=None, height: int=None):
+    def __init__(self, src: int = -1, width: int = None, height: int = None):
         video = cv2.VideoCapture(src)
         if not video.isOpened():
             raise RuntimeError("VideoCapture({}) could not open.".format(src))
@@ -49,7 +49,7 @@ class VideoRecorder(object):
             if image is None:
                 time.sleep(0.1)
                 continue
-            _, image = cv2.imencode('.png', image)
+            _, image = cv2.imencode('.jpg', image)
             image_np = np.array(image).tobytes()
             self.storage.set('image', image_np)
             image_id = os.urandom(2)

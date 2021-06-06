@@ -55,7 +55,7 @@ def main(args: argparse.Namespace):
 
     recorder = VideoRecorder()
     recorder.start_record()
-    
+
     app.listen(args.port)
     ioloop.PeriodicCallback(try_exit, 100).start()
     ioloop.IOLoop.instance().start()
@@ -67,10 +67,7 @@ if __name__ == "__main__":
                         type=int,
                         default=8080,
                         help="Run on the given port")
-    parser.add_argument("--width",
-                        type=int,
-                        default=None,
-                        help="Vidoe width")
+    parser.add_argument("--width", type=int, default=None, help="Vidoe width")
     parser.add_argument("--height",
                         type=int,
                         default=None,
