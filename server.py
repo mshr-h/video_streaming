@@ -29,38 +29,23 @@ class IndexHandler(web.RequestHandler):
 class VideoHandler(websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
         super(VideoHandler, self).__init__(*args, **kwargs)
-        self.store = redis.Redis()
+        self.storage = redis.Redis()
         self.prev_image_id = None
 
     def on_message(self, message):
         while True:
             time.sleep(0.01)
-            image_id = self.store.get("image_id")
+            image_id = self.storage.get("image_id")
             if image_id != self.prev_image_id:
                 self.prev_image_id = image_id
                 break
 
-        image = self.store.get("image")
+        image = self.storage.get("image")
         image = base64.b64encode(image)
         self.write_message(image)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Camera Server")
-    parser.add_argument("--port",
-                        type=int,
-                        default=9000,
-                        help="Run on the given port")
-    parser.add_argument("--width",
-                        type=int,
-                        default=None,
-                        help="Vidoe width")
-    parser.add_argument("--height",
-                        type=int,
-                        default=None,
-                        help="Video height")
-    args = parser.parse_args()
-
+def main(args: argparse.Namespace):
     signal.signal(signal.SIGINT, signal_handler)
 
     app = web.Application([
@@ -74,3 +59,22 @@ if __name__ == "__main__":
     app.listen(args.port)
     ioloop.PeriodicCallback(try_exit, 100).start()
     ioloop.IOLoop.instance().start()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Camera Server")
+    parser.add_argument("--port",
+                        type=int,
+                        default=8080,
+                        help="Run on the given port")
+    parser.add_argument("--width",
+                        type=int,
+                        default=None,
+                        help="Vidoe width")
+    parser.add_argument("--height",
+                        type=int,
+                        default=None,
+                        help="Video height")
+    args: argparse.Namespace = parser.parse_args()
+
+    main(args)

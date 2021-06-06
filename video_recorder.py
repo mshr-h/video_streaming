@@ -4,17 +4,19 @@ import threading
 import redis
 import numpy as np
 import time
+import coils
+import logging
 
 
 class VideoRecorder(object):
-    def __init__(self, src=-1, width=None, height=None):
+    def __init__(self, src: int=-1, width: int=None, height: int=None):
         video = cv2.VideoCapture(src)
         if not video.isOpened():
             raise RuntimeError("VideoCapture({}) could not open.".format(src))
         video.set(3, width)
         video.set(4, height)
         self.video = video
-        self.store = redis.Redis()
+        self.storage = redis.Redis()
         self.running = False
 
         self.fps = coils.RateTicker((1, 5))
@@ -45,8 +47,11 @@ class VideoRecorder(object):
         while self.running:
             _, image = self.video.read()
             if image is None:
-                time.sleep(0.3)
+                time.sleep(0.1)
                 continue
             _, image = cv2.imencode('.png', image)
             image_np = np.array(image).tobytes()
+            self.storage.set('image', image_np)
+            image_id = os.urandom(2)
+            self.storage.set('image_id', image_id)
             self.logger.debug("{:.2f} fps".format(*self.fps.tick()))
