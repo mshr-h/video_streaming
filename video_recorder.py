@@ -44,6 +44,7 @@ class VideoRecorder(object):
         self.logger.propagate = False
 
         # TODO: split inference engine into dedicated class
+        # TODO: async run
         self.labels = load_labels("models/imagenet_labels.txt")
         self.interpreter = tflite.Interpreter(
                 model_path="models/mobilenet_v2_1.0_224_quant_edgetpu.tflite",
