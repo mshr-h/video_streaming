@@ -13,7 +13,14 @@
       };
 
       webSocket.onmessage = function (msg) {
-        $("#video").attr("src", "data:image/jpg;base64," + msg.data);
+        <!-- $("#video").attr("src", "data:image/jpg;base64," + msg.data); -->
+        msg = msg.data.split(",");
+        var image = msg[0];
+        var image_class = msg[1];
+        var image_score = msg[2];
+        $("#video").attr("src", "data:image/jpg;base64," + image);
+        $("#image_class").text(image_class); 
+        $("#image_score").text(image_score); 
         webSocket.send(1);
       };
 
@@ -33,6 +40,8 @@
 <body>
   <h1>Neko Camera</h1>
   <img id="video" src="" />
+  <p id="image_class"></p>
+  <p id="image_score"></p>
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 from video_recorder import VideoRecorder
+import pdb_attach
 import time
 import base64
 import redis
@@ -6,6 +7,8 @@ import argparse
 import signal
 
 from tornado import websocket, web, ioloop
+
+pdb_attach.listen(5000)
 
 accect_ctlc = False
 
@@ -42,7 +45,10 @@ class VideoHandler(websocket.WebSocketHandler):
 
         image = self.storage.get("image")
         image = base64.b64encode(image)
-        self.write_message(image)
+        image_class = self.storage.get("image_class").decode("utf-8")
+        image_score = float(self.storage.get("image_score"))
+        message = ",".join([str(image.decode()), str(image_class), str(image_score)])
+        self.write_message(message)
 
 
 def main(args: argparse.Namespace):
